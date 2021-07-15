@@ -34,6 +34,7 @@ if err != nil {
 To get a list of all contacts, you must call the following function. This function returns all values in a struct.
 
 ```go
+// Get all contacts
 contacts, err := goplacetel.Contacts("token")
 if err != nil {
     fmt.Println(err)
