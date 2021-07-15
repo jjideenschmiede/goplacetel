@@ -16,8 +16,35 @@ import (
 	"fmt"
 )
 
-// ContactsReturn is to decode the json return
-type ContactsReturn struct {
+// ContactBody is to build a new contact
+type ContactBody struct {
+	Id             int         `json:"id,omitempty"`
+	UserId         int         `json:"user_id,omitempty"`
+	Speeddail      interface{} `json:"speeddail"`
+	FirstName      string      `json:"first_name"`
+	LastName       string      `json:"last_name"`
+	Email          string      `json:"email"`
+	EmailWork      string      `json:"email_work"`
+	Company        string      `json:"company"`
+	Address        string      `json:"address"`
+	AddressWork    string      `json:"address_work"`
+	PhoneWork      string      `json:"phone_work"`
+	MobileWork     string      `json:"mobile_work"`
+	Phone          string      `json:"phone"`
+	Mobile         string      `json:"mobile"`
+	Fax            string      `json:"fax"`
+	FaxWork        string      `json:"fax_work"`
+	FacebookUrl    string      `json:"facebook_url"`
+	LinkedinUrl    string      `json:"linkedin_url"`
+	XingUrl        string      `json:"xing_url"`
+	TwitterAccount string      `json:"twitter_account"`
+	Blocked        bool        `json:"blocked"`
+	UpdatedAt      string      `json:"updated_at,omitempty"`
+	CreatedAt      string      `json:"created_at,omitempty"`
+}
+
+// ContactReturn is to decode the json return
+type ContactReturn struct {
 	Id             int         `json:"id"`
 	UserId         int         `json:"user_id"`
 	Speeddail      interface{} `json:"speeddail"`
@@ -44,10 +71,10 @@ type ContactsReturn struct {
 }
 
 // Contacts is to get all contacts from the api
-func Contacts(token string) (*[]ContactsReturn, error) {
+func Contacts(token string) (*[]ContactReturn, error) {
 
 	// To decode the json data
-	var contacts []ContactsReturn
+	var contacts []ContactReturn
 
 	// To call the pages
 	page := 1
@@ -65,7 +92,7 @@ func Contacts(token string) (*[]ContactsReturn, error) {
 		}
 
 		// Decode data
-		var decode []ContactsReturn
+		var decode []ContactReturn
 
 		err = json.NewDecoder(response.Body).Decode(&decode)
 		if err != nil {
@@ -89,5 +116,39 @@ func Contacts(token string) (*[]ContactsReturn, error) {
 
 	// Return data
 	return &contacts, nil
+
+}
+
+// AddContact is to add a new contact
+func AddContact(body *ContactBody, token string) (*ContactReturn, error) {
+
+	// Convert data
+	convert, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set config for new request
+	r := Request{"/contacts", "POST", token, convert}
+
+	// Send new request
+	response, err := r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	// Close response body after function ends
+	defer response.Body.Close()
+
+	// Decode data
+	var decode ContactReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return data
+	return &decode, nil
 
 }
