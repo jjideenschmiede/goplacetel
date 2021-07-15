@@ -66,6 +66,42 @@ type ContactReturn struct {
 	CreatedAt      string      `json:"created_at"`
 }
 
+// DeleteContactReturn is to decode the json data
+type DeleteContactReturn struct {
+	Id             int         `json:"id"`
+	UserId         int         `json:"user_id"`
+	Speeddail      interface{} `json:"speeddail"`
+	FirstName      string      `json:"firstName"`
+	LastName       string      `json:"lastName"`
+	Number1        string      `json:"number1"`
+	Number2        string      `json:"number2"`
+	Number3        string      `json:"number3"`
+	Number4        string      `json:"number4"`
+	Number5        string      `json:"number5"`
+	IsOnBlacklist  bool        `json:"isOnBlacklist"`
+	Email          string      `json:"email"`
+	MoreNumbers    interface{} `json:"more_numbers"`
+	ClientId       int         `json:"client_id"`
+	IsGlobal       bool        `json:"is_global"`
+	Company        string      `json:"company"`
+	Address        string      `json:"address"`
+	ContactBookId  string      `json:"contact_book_id"`
+	ImportFrom     interface{} `json:"import_from"`
+	ImportId       interface{} `json:"import_id"`
+	EmailWork      string      `json:"email_work"`
+	AddressWork    string      `json:"address_work"`
+	Fax            string      `json:"fax"`
+	FaxWork        string      `json:"fax_work"`
+	Color          interface{} `json:"color"`
+	FacebookUrl    string      `json:"facebook_url"`
+	LinkedinUrl    string      `json:"linkedin_url"`
+	XingUrl        string      `json:"xing_url"`
+	GoogleplusUrl  interface{} `json:"googleplus_url"`
+	TwitterAccount string      `json:"twitter_account"`
+	CreatedAt      string      `json:"created_at"`
+	UpdatedAt      string      `json:"updated_at"`
+}
+
 // Contacts is to get all contacts from the api
 func Contacts(token string) (*[]ContactReturn, error) {
 
@@ -172,6 +208,34 @@ func UpdateContact(body *ContactBody, token string) (*ContactReturn, error) {
 
 	// Decode data
 	var decode ContactReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return data
+	return &decode, nil
+
+}
+
+// DeleteContact is to add a new contact
+func DeleteContact(id string, token string) (*DeleteContactReturn, error) {
+
+	// Set config for new request
+	r := Request{"/contacts/" + id, "DELETE", token, nil}
+
+	// Send new request
+	response, err := r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	// Close response body after function ends
+	defer response.Body.Close()
+
+	// Decode data
+	var decode DeleteContactReturn
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {

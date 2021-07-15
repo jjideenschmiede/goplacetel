@@ -49,7 +49,7 @@ If a new contact is to be created, then this can be done as follows. The field: 
 
 ```go
 // Define body
-body := &ContactBody{
+body := &goplacetel.ContactBody{
     0,
     "first_name",
     "last_name",
@@ -72,7 +72,7 @@ body := &ContactBody{
 }
 
 // Add a new contact
-contact, err := AddContact(body, "token")
+contact, err := goplacetel.AddContact(body, "token")
 if err != nil {
     fmt.Println(err)
 } else {
@@ -86,7 +86,7 @@ This function is identical to the AddContact function. With the difference that 
 
 ```go
 // Define body
-body := &ContactBody{
+body := &goplacetel.ContactBody{
     id,
     "first_name",
     "last_name",
@@ -109,10 +109,24 @@ body := &ContactBody{
 }
 
 // Update a contact
-contact, err := UpdateContact(body, "token")
+contact, err := goplacetel.UpdateContact(body, "token")
 if err != nil {
     fmt.Println(err)
 } else {
     fmt.Println(contact)
+}
+```
+
+### Remove a contact
+
+To be able to remove a contact, the ID is needed. You get this with the function goplacetel.Contacts().
+
+```go
+// Remove a contact
+delete, err := goplacetel.DeleteContact("id", "token")
+if err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Println(delete)
 }
 ```
