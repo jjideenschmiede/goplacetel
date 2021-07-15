@@ -9,7 +9,7 @@
 //
 //**********************************************************
 
-package placetel
+package goplacetel
 
 import (
 	"encoding/json"
