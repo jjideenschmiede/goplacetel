@@ -28,3 +28,16 @@ if err != nil {
     fmt.Println(response)
 }
 ```
+
+### Get all contacts
+
+To get a list of all contacts, you must call the following function. This function returns all values in a struct.
+
+```go
+contacts, err := goplacetel.Contacts("token")
+if err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Println(contacts)
+}
+```
