@@ -2,3 +2,5 @@
 sms_test.go
 
 .idea/
+
+contacts_test.go
