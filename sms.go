@@ -1,6 +1,6 @@
 //**********************************************************
 //
-// Copyright (C) 2018 - 2021 J&J Ideenschmiede UG (haftungsbeschränkt) <info@jj-ideenschmiede.de>
+// Copyright (C) 2018 - 2021 J&J Ideenschmiede GmbH <info@jj-ideenschmiede.de>
 //
 // This file is part of placetel.
 // All code may be used. Feel free and maybe code something better.
@@ -12,39 +12,50 @@
 package placetel
 
 import (
-	"net/http"
-	"strings"
+	"encoding/json"
 )
 
-// Send sms
-func SendSMS(recipient, message, token string) error {
+// SendSmsBody is to build the request body
+type SendSmsBody struct {
+	Recipient string `json:"recipient"`
+	Message   string `json:"message"`
+}
 
-	// Define client
-	client := &http.Client{}
+type SendSmsReturn struct {
+	Recipient string `json:"recipient"`
+	Message   string `json:"message"`
+}
 
-	// Set body
-	body := strings.NewReader(`{"recipient": "` + recipient + `", "message": "` + message + `"}`)
+// SendSms is to send a sms via the placetel api
+func SendSms(body *SendSmsBody, token string) (*SendSmsReturn, error) {
 
-	// Set request
-	request, err := http.NewRequest("POST", "https://api.placetel.de/v2/sms", body)
+	// Convert body
+	convert, err := json.Marshal(body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// Define header
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", "Bearer "+token)
+	// Set config for new request
+	r := Request{"/sms", "POST", token, convert}
 
-	// Send request to placetel
-	response, err := client.Do(request)
+	// Send new request
+	response, err := r.Send()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// Close response after function ends
+	// Close response body after function ends
 	defer response.Body.Close()
 
-	// Return
-	return nil
+	// Decode data
+	var decode SendSmsReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return data
+	return &decode, nil
 
 }
