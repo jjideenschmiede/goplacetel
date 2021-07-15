@@ -45,14 +45,12 @@ if err != nil {
 
 ### Add a contact
 
-If a new contact is to be created, then this can be done as follows. The fields: id, user_id, updated_at & created_at can be ignored.
+If a new contact is to be created, then this can be done as follows. The field: id (it is the first field) can be ignored.
 
 ```go
 // Define body
 body := &ContactBody{
     0,
-    0,
-    nil,
     "first_name",
     "last_name",
     "email",
@@ -71,12 +69,47 @@ body := &ContactBody{
     "xing_url",
     "twitter_account",
     false,
-    "",
-    "",
 }
 
 // Add a new contact
 contact, err := AddContact(body, "token")
+if err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Println(contact)
+}
+```
+
+### Update a contact
+
+This function is identical to the AddContact function. With the difference that the Id must be specified.
+
+```go
+// Define body
+body := &ContactBody{
+    id,
+    "first_name",
+    "last_name",
+    "email",
+    "email_work",
+    "company",
+    "address",
+    "address_work",
+    "phone_work",
+    "mobile_work",
+    "phone",
+    "mobile",
+    "fax",
+    "fax_work",
+    "facebook_url",
+    "linkedin_url",
+    "xing_url",
+    "twitter_account",
+    false,
+}
+
+// Update a contact
+contact, err := UpdateContact(body, "token")
 if err != nil {
     fmt.Println(err)
 } else {
