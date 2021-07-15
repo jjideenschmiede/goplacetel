@@ -43,6 +43,20 @@ if err != nil {
 }
 ```
 
+### Get a contact by id
+
+Damit man einen speziellen Kontakt auslesen kann, wird die ID benötigt. Diese erhalten Sie mit der Funktion goplacetel.Contacts().
+
+```go
+// Get a contact by id
+contact, err := Contact("id", "token")
+if err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Println(contact)
+}
+```
+
 ### Add a contact
 
 If a new contact is to be created, then this can be done as follows. The field: id (it is the first field) can be ignored.

@@ -151,6 +151,34 @@ func Contacts(token string) (*[]ContactReturn, error) {
 
 }
 
+// Contact is to get a contact by id
+func Contact(id string, token string) (*ContactReturn, error) {
+
+	// Set config for new request
+	r := Request{"/contacts/" + id, "GET", token, nil}
+
+	// Send new request
+	response, err := r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	// Close response body after function ends
+	defer response.Body.Close()
+
+	// Decode data
+	var decode ContactReturn
+
+	err = json.NewDecoder(response.Body).Decode(&decode)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return data
+	return &decode, nil
+
+}
+
 // AddContact is to add a new contact
 func AddContact(body *ContactBody, token string) (*ContactReturn, error) {
 
