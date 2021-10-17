@@ -18,7 +18,7 @@ With the SMS sent you are able to send sms through your Placetel account. The wh
 
 ```go
 // Define body
-body := &goplacetel.SendSmsBody{"0123456789", "Test message!"}
+body := goplacetel.SendSmsBody{"0123456789", "Test message!"}
 
 // Send sms
 response, err := goplacetel.SendSms(body, "token")
@@ -63,7 +63,7 @@ If a new contact is to be created, then this can be done as follows. The field: 
 
 ```go
 // Define body
-body := &goplacetel.ContactBody{
+body := goplacetel.ContactBody{
     0,
     "first_name",
     "last_name",
@@ -100,7 +100,7 @@ This function is identical to the AddContact function. With the difference that 
 
 ```go
 // Define body
-body := &goplacetel.ContactBody{
+body := goplacetel.ContactBody{
     id,
     "first_name",
     "last_name",

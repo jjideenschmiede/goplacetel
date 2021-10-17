@@ -183,7 +183,7 @@ func Contact(id string, token string) (ContactReturn, error) {
 }
 
 // AddContact is to add a new contact
-func AddContact(body *ContactBody, token string) (ContactReturn, error) {
+func AddContact(body ContactBody, token string) (ContactReturn, error) {
 
 	// Convert data
 	convert, err := json.Marshal(body)
