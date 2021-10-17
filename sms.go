@@ -27,12 +27,12 @@ type SendSmsReturn struct {
 }
 
 // SendSms is to send a sms via the placetel api
-func SendSms(body *SendSmsBody, token string) (*SendSmsReturn, error) {
+func SendSms(body SendSmsBody, token string) (SendSmsReturn, error) {
 
 	// Convert body
 	convert, err := json.Marshal(body)
 	if err != nil {
-		return nil, err
+		return SendSmsReturn{}, err
 	}
 
 	// Set config for new request
@@ -41,7 +41,7 @@ func SendSms(body *SendSmsBody, token string) (*SendSmsReturn, error) {
 	// Send new request
 	response, err := r.Send()
 	if err != nil {
-		return nil, err
+		return SendSmsReturn{}, err
 	}
 
 	// Close response body after function ends
@@ -52,10 +52,10 @@ func SendSms(body *SendSmsBody, token string) (*SendSmsReturn, error) {
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return nil, err
+		return SendSmsReturn{}, err
 	}
 
 	// Return data
-	return &decode, nil
+	return decode, nil
 
 }
