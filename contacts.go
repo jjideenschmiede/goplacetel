@@ -14,6 +14,7 @@ package goplacetel
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // ContactBody is to build a new contact
@@ -43,7 +44,7 @@ type ContactBody struct {
 type ContactReturn struct {
 	Id             int         `json:"id"`
 	UserId         int         `json:"user_id"`
-	Speeddail      interface{} `json:"speeddail"`
+	Speeddial      interface{} `json:"speeddial"`
 	FirstName      string      `json:"first_name"`
 	LastName       string      `json:"last_name"`
 	Email          string      `json:"email"`
@@ -62,8 +63,8 @@ type ContactReturn struct {
 	XingUrl        string      `json:"xing_url"`
 	TwitterAccount string      `json:"twitter_account"`
 	Blocked        bool        `json:"blocked"`
-	UpdatedAt      string      `json:"updated_at"`
-	CreatedAt      string      `json:"created_at"`
+	UpdatedAt      time.Time   `json:"updated_at"`
+	CreatedAt      time.Time   `json:"created_at"`
 }
 
 // DeleteContactReturn is to decode the json data
@@ -103,7 +104,7 @@ type DeleteContactReturn struct {
 }
 
 // Contacts is to get all contacts from the api
-func Contacts(token string) (*[]ContactReturn, error) {
+func Contacts(token string) ([]ContactReturn, error) {
 
 	// To decode the json data
 	var contacts []ContactReturn
@@ -142,17 +143,19 @@ func Contacts(token string) (*[]ContactReturn, error) {
 		// Check length & break the loop
 		if len(decode) < 25 {
 			break
+		} else {
+			page++
 		}
 
 	}
 
 	// Return data
-	return &contacts, nil
+	return contacts, nil
 
 }
 
 // Contact is to get a contact by id
-func Contact(id string, token string) (*ContactReturn, error) {
+func Contact(id string, token string) (ContactReturn, error) {
 
 	// Set config for new request
 	r := Request{"/contacts/" + id, "GET", token, nil}
@@ -160,7 +163,7 @@ func Contact(id string, token string) (*ContactReturn, error) {
 	// Send new request
 	response, err := r.Send()
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Close response body after function ends
@@ -171,21 +174,21 @@ func Contact(id string, token string) (*ContactReturn, error) {
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Return data
-	return &decode, nil
+	return decode, nil
 
 }
 
 // AddContact is to add a new contact
-func AddContact(body *ContactBody, token string) (*ContactReturn, error) {
+func AddContact(body *ContactBody, token string) (ContactReturn, error) {
 
 	// Convert data
 	convert, err := json.Marshal(body)
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Set config for new request
@@ -194,7 +197,7 @@ func AddContact(body *ContactBody, token string) (*ContactReturn, error) {
 	// Send new request
 	response, err := r.Send()
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Close response body after function ends
@@ -205,21 +208,21 @@ func AddContact(body *ContactBody, token string) (*ContactReturn, error) {
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Return data
-	return &decode, nil
+	return decode, nil
 
 }
 
 // UpdateContact is to add a new contact
-func UpdateContact(body *ContactBody, token string) (*ContactReturn, error) {
+func UpdateContact(body ContactBody, token string) (ContactReturn, error) {
 
 	// Convert data
 	convert, err := json.Marshal(body)
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Set config for new request
@@ -228,7 +231,7 @@ func UpdateContact(body *ContactBody, token string) (*ContactReturn, error) {
 	// Send new request
 	response, err := r.Send()
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Close response body after function ends
@@ -239,16 +242,16 @@ func UpdateContact(body *ContactBody, token string) (*ContactReturn, error) {
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return nil, err
+		return ContactReturn{}, err
 	}
 
 	// Return data
-	return &decode, nil
+	return decode, nil
 
 }
 
 // DeleteContact is to add a new contact
-func DeleteContact(id string, token string) (*DeleteContactReturn, error) {
+func DeleteContact(id string, token string) (DeleteContactReturn, error) {
 
 	// Set config for new request
 	r := Request{"/contacts/" + id, "DELETE", token, nil}
@@ -256,7 +259,7 @@ func DeleteContact(id string, token string) (*DeleteContactReturn, error) {
 	// Send new request
 	response, err := r.Send()
 	if err != nil {
-		return nil, err
+		return DeleteContactReturn{}, err
 	}
 
 	// Close response body after function ends
@@ -267,10 +270,10 @@ func DeleteContact(id string, token string) (*DeleteContactReturn, error) {
 
 	err = json.NewDecoder(response.Body).Decode(&decode)
 	if err != nil {
-		return nil, err
+		return DeleteContactReturn{}, err
 	}
 
 	// Return data
-	return &decode, nil
+	return decode, nil
 
 }
